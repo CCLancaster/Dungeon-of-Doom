@@ -10,7 +10,8 @@ let ctx = game.getContext("2d");
 
 console.log(ctx);
 
-// find canvas width and height
+// find canvas width and height (will use this for game loop later)
+    //this value will also be necessary to figure out where the screen limits are (aka console.log the values)
 game.setAttribute("width", getComputedStyle(game)["width"]);
 game.setAttribute("height", getComputedStyle(game)["height"]);
 
@@ -18,19 +19,21 @@ console.log(getComputedStyle(game)["width"]);
 console.log(getComputedStyle(game)["height"]);
 
 
-// ---- creating the player and door ----
+// ---- creating the GameOjects ----
 let GameObject = function(x, y, color, width, height) {
     this.x = x;
     this.y = y;
     this.color = color;
     this.width = width;
     this.height = height;
+    this.alive = true;
     this.render = function() {
         ctx.fillStyle = this.color;
         ctx.fillRect(this.x, this.y, this.width, this.height);
     };
 };
 
+// ---- creating player and door ----
 let player = new GameObject(285, 268, "#f5173c", 40, 40);
 
 console.log("Let's do this!");
@@ -66,3 +69,82 @@ for (let i=0; i < 6; i++) {
 for (let i = 0; i < 5; i++) {
     rowTwoBlocks[i].render();
 };
+
+// ---- adding player movement ----
+
+//add event listener to key strokes A & D (use "keydown")
+document.addEventListener("keydown", movementHandler);
+
+//if A is pressed (KeyCode), move the player left
+    // left changes player -= on x axis
+    //if KeyCode of e === A, change player x to decrement
+//if D is pressed (KeyCode), move the player right
+    // right chnges player += on x axis
+    // if KeyCode of e === D, change player x to increase
+function movementHandler(e) {
+    console.log(player)
+    switch (e.keyCode) {
+        case(65):
+            player.x -= 10;
+            break;
+        case(68):
+            player.x += 10;
+    }
+
+    player.render();
+};
+
+//TODO: add restriction to movement so player can't go off screen
+
+
+// ---- game loop ----
+
+let gameLoop = function () {
+
+console.log("I'm looping!");
+
+//clear board
+    ctx.clearRect(0, 0, game.width, game.height);
+
+//render player 
+    player.render();
+
+//render door
+    door.render();
+
+//render remaining blocks
+    rowOneBlocks.forEach(function(rowBlock){
+        if (rowBlock.alive === true) {
+            rowBlock.render();
+            console.log(rowBlock);
+        }
+    });
+    rowTwoBlocks.forEach(function(rowBlock) {
+        if (rowBlock.alive === true) {
+            rowBlock.render();
+            console.log(rowBlock);
+        }
+    });
+//check for win
+    //requires collision detection
+
+//TODO: collision detection
+
+//check for collision
+
+};
+
+//set interval for game loop setInterval (gameLoop, 75)
+// helpful timeloop article: https://isaacsukin.com/news/2015/01/detailed-explanation-javascript-game-loops-and-timing
+
+let runGame = setInterval(gameLoop, 75);
+
+
+// ---- laser beam event listener ----
+
+
+
+// ---- collision detection ----
+
+
+// ---- start button ----
