@@ -141,10 +141,46 @@ let runGame = setInterval(gameLoop, 75);
 
 
 // ---- laser beam event listener ----
-
+document.addEventListener("keydown", pewPewHandler);
+function pewPewHandler(e) {
+    //creates a small rect or "laser beam" (new GameObject.render)
+        //5px x 5px
+    //moves small rect up 10px/500 mili
+        // beam.y -= 10
+    //detect collision with box or topLine (if else)
+        //when collision, stop interval
+        //check for win()
+}
 
 
 // ---- collision detection ----
 
+// ---- check for win ----
+    //grab hitBox (array?)
+    //compare to see if any blocks are in the hitBox
+        //if YES
+            //check if player has collided with blocks || topLine
+                //if YES
+                    //lose ()
+                //if NO
+                    //nothing...gameLoop should continue to run 
+        //if NO
+            //win()
 
+        
+
+
+// ---- win() ----
+    //move scoreCounter up by one
+
+//TODO: lose() 
+            //print "Hmm this is most unfortunate. Care to die ::ahem:: try again?"
+            //activate start button
+//TODO: scoreCounter().value to print on screen
+//TODO: gettingClose()that prints "Almost there!" when only one block left
+//TODO: hitBox
+//TODO: commentBoard
+//TODO: topLine
 // ---- start button ----
+    //TODO: gameInit()
+    
