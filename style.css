@@ -1,0 +1,90 @@
+* {
+    /* font-family: 'Press Start 2P', cursive; */
+    font-family: 'Aldrich', sans-serif;
+    text-align: center;
+}
+
+html,body {
+    margin: 0;
+    padding: 0;
+  }
+
+body {
+    margin-top: 10%;
+    background-color: #1a1a1a;
+    background-size: cover;
+    background-repeat: space;
+}
+
+/* #instructions {
+    width: 75%;
+    height: 50em;
+    margin: 0 auto;
+    border: 4px solid #99ff66;
+    padding: 5px;
+    display: inline-block;
+
+} */
+
+h1 {
+    color: white;
+    font-size: 50px;
+}
+
+h2 {
+    color: #ff9c00;
+}
+
+h3 {
+    color: #3786ff;
+}
+
+p {
+    color: white;
+    text-align: center;
+}
+canvas {
+    background-color: #2e2e2e;
+    width: 100%;
+    height: 100%;
+}
+
+#container {
+    
+    width: 610px;
+    height: 415px;
+    background-color: #99ff66;
+    margin: 0 auto;
+    padding: 5px;
+    display: grid;
+    grid-gap: 5px;
+    grid-template-rows: .25fr .5fr .25fr;
+    grid-template-columns: .25fr .5fr .25fr;
+    grid-template-areas: 
+        "game game game"
+        "game game game"
+        "btm-left btm-right btm-right";
+    }
+
+main, #btm-left, #btm-right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #2e2e2e;
+}
+
+main {
+    grid-area: game;
+    /* background-color: aqua; */
+}
+
+#btm-left {
+    grid-area: btm-left;
+    /* background-color: red; */
+}
+
+#btm-right {
+    grid-area: btm-right;
+    /* background-color: purple; */
+}
+
