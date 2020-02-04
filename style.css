@@ -36,7 +36,7 @@ h2 {
 }
 
 h3 {
-    color: #3786ff;
+    color: #99ff66;
 }
 
 p {
@@ -53,7 +53,7 @@ canvas {
     
     width: 610px;
     height: 415px;
-    background-color: #99ff66;
+    background-color: #0a46ee;
     margin: 0 auto;
     padding: 5px;
     display: grid;

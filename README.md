@@ -65,3 +65,5 @@ Super Stretch!:
 ⏹ different color blocks take different "hit" countsu
 
 
+UPDATES (while coding):
+👾 # of Blocks: Noticed that five boxes on the top row and three on the second row were too few to be any challenge for the game. Increased to six boxes randomly populated on the top row and five on the second row.

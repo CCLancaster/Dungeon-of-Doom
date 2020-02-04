@@ -18,7 +18,7 @@ console.log(getComputedStyle(game)["width"]);
 console.log(getComputedStyle(game)["height"]);
 
 
-// creating the player and objects
+// ---- creating the player and door ----
 let GameObject = function(x, y, color, width, height) {
     this.x = x;
     this.y = y;
@@ -37,16 +37,32 @@ console.log("Let's do this!");
 
 player.render();
 
-// let player = {
-//     x: 285,
-//     y: 268,
-//     color: "#f5173c",
-//     width: 40,
-//     height: 40,
-//     render: function() {
-//         ctx.fillStyle = this.color;
-//         ctx.fillRect(this.x, this.y, this.width, this.height);
-//     }
-// }
+let door = new GameObject((Math.random() * 470) + 10, 0, "#ffff33", 70, 10);
 
-// player.render();
+door.render();
+
+// ---- creating blocks ----
+//make a block array
+let rowOneBlocks = [];
+let rowTwoBlocks = [];
+
+//for loop to push new Game Object
+for (let i = 0; i < 6; i++) {
+    rowOneBlocks.push(new GameObject((Math.random() * 550) + 10, 10, "#7718d8", 50, 50));
+};
+
+for (let i = 0; i < 5; i++) {
+    rowTwoBlocks.push(new GameObject((Math.random() * 550) + 10, 60, "#7718d8", 50, 50));
+    };
+
+console.log(rowOneBlocks);
+console.log(rowTwoBlocks);
+
+//for loop to render block[i]
+for (let i=0; i < 6; i++) {
+    rowOneBlocks[i].render();
+};
+
+for (let i = 0; i < 5; i++) {
+    rowTwoBlocks[i].render();
+};
