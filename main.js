@@ -19,36 +19,34 @@ console.log(getComputedStyle(game)["height"]);
 
 
 // creating the player and objects
-
-
-// function gameObject(x, y, color, width, height) {
-//     this.x = x;
-//     this.y = y;
-//     this.color = color;
-//     this.width = width;
-//     this.height = height;
-//     this.render = function() {
-//         ctx.fillBox = this.color;
-//         ctx.mkBox(this.x, this.y, this.width, this.height);
-//     };
-// };
-
-// let player = new gameObject(285, 268, "#f5173c", 40, 40);
-
-// console.log("Let's do this!");
-
-// player.render();
-
-let player = {
-    x: 285,
-    y: 268,
-    color: "#f5173c",
-    width: 40,
-    height: 40,
-    render: function() {
+let GameObject = function(x, y, color, width, height) {
+    this.x = x;
+    this.y = y;
+    this.color = color;
+    this.width = width;
+    this.height = height;
+    this.render = function() {
         ctx.fillStyle = this.color;
         ctx.fillRect(this.x, this.y, this.width, this.height);
-    }
-}
+    };
+};
+
+let player = new GameObject(285, 268, "#f5173c", 40, 40);
+
+console.log("Let's do this!");
 
 player.render();
+
+// let player = {
+//     x: 285,
+//     y: 268,
+//     color: "#f5173c",
+//     width: 40,
+//     height: 40,
+//     render: function() {
+//         ctx.fillStyle = this.color;
+//         ctx.fillRect(this.x, this.y, this.width, this.height);
+//     }
+// }
+
+// player.render();
