@@ -1,4 +1,4 @@
-// global variables
+// ------- global variables -------
 
 // DOM references
 let game = document.getElementById("game");
@@ -17,9 +17,9 @@ game.setAttribute("height", getComputedStyle(game)["height"]);
 
 // console.log(getComputedStyle(game)["width"]);
 // console.log(getComputedStyle(game)["height"]);
+// -----------------------------------
 
-
-// ---- creating the GameOjects ----
+// ----- creating the GameOjects -----
 let GameObject = function(x, y, color, width, height) {
     this.x = x;
     this.y = y;
@@ -32,8 +32,9 @@ let GameObject = function(x, y, color, width, height) {
         ctx.fillRect(this.x, this.y, this.width, this.height);
     };
 };
+// -----------------------------------
 
-// ---- creating player and door ----
+// -- creating player, door & beam ----
 let player = new GameObject(285, 268, "#f5173c", 40, 40);
 
 // console.log("Let's do this!");
@@ -46,8 +47,9 @@ door.render();
 
 let beam = new GameObject(player.x, player.y, "white", 5, 5);
 
+// -----------------------------------
 
-// ---- creating blocks ----
+// -------- creating blocks ----------
 //make a block array
 let rowOneBlocks = [];
 let rowTwoBlocks = [];
@@ -72,8 +74,9 @@ for (let i=0; i < 6; i++) {
 for (let i = 0; i < 5; i++) {
     rowTwoBlocks[i].render();
 };
+// -----------------------------------
 
-// ---- adding player movement ----
+// ------ adding player movement ------
 
 //add event listener to key strokes A & D (use "keydown")
 document.addEventListener("keydown", movementHandler);
@@ -99,8 +102,9 @@ function movementHandler(e) {
 
 //TODO: add restriction to movement so player can't go off screen
 
+// -----------------------------------
 
-// ---- game loop ----
+// ----------- game loop -------------
 
 let gameLoop = function () {
 
@@ -130,10 +134,9 @@ let gameLoop = function () {
     });
 //check for win
     //requires collision detection
-
-//TODO: collision detection
-
+    
 //check for collision
+    detectHit();
 
 //move the "lazer gun"/beam with the player to target for fire (pewPew();)
     beam.x = player.x;
@@ -145,11 +148,12 @@ let gameLoop = function () {
 
 let runGame = setInterval(gameLoop, 75);
 
+// -----------------------------------
 
 // ---- laser beam event listener ----
 document.addEventListener("keydown", pewPewHandler);
 
-
+var myInterval;
 function pewPewHandler(e) {
     //creates a small rect or "laser beam" (new GameObject.render)
         //5px x 5px
@@ -158,23 +162,72 @@ function pewPewHandler(e) {
         console.log("I've pressed Enter!");
     
         beam.render();
-
+        
         // moves small rect up 10px/500 mili
             // beam.y -= 10
         function beamMove() {
                 beam.y -= 10;
         };
             
-        setInterval(beamMove, 100);
+        myInterval = setInterval(beamMove, 100);
     };
     //detect collision with box or topLine (if else)
         //when collision, stop interval
         //check for win()
 };
 
+// -----------------------------------
 
-// ---- collision detection ----
-    //
+// ------- collision detection -------
+
+    //check for collision between beam and blocks
+        // check four conditions:
+            //smallest point of beam (beam.x) < largest point of my blocks (rowBlock.x + rowBlock.width)
+            //largest point of beam (beam.x + beam.width) > smallest point of rowBlock (rowBlock.x)
+            // topmost part of beam (beam.y) < greatest version of the rowBlock (rowBlock.y + rowBlock.height)
+            // beam.y + beam.height > rowBlock.y
+function detectHit() {
+    rowOneBlocks.forEach(function(rowBlock){
+        if (rowBlock.alive === true) {
+            if (beam.x < rowBlock.x + rowBlock.width
+                && beam.x + beam.width > rowBlock.x
+                && beam.y < rowBlock.y + rowBlock.height
+                && beam.y + beam.height > rowBlock.y) {
+                    //change that block from alive to dead (alive = false)
+                    rowBlock.alive = false;
+
+                    //end beam interval (or set beam to alive = false?)
+                    // clearInterval(pewPewHandler);
+                    clearInterval(myInterval);
+                    beam.y = player.y;
+
+                    //print Kaboom!
+                    document.getElementById("commentBoard")
+                    .textContent = "Kaboom!";
+                }
+        }
+    });
+    rowTwoBlocks.forEach(function(rowBlock){
+        if (rowBlock.alive === true) {
+            if (beam.x < rowBlock.x + rowBlock.width
+                && beam.x + beam.width > rowBlock.x
+                && beam.y < rowBlock.y + rowBlock.height
+                && beam.y + beam.height > rowBlock.y) {
+                    rowBlock.alive = false;
+                    
+                    clearInterval(myInterval);
+                    beam.y = player.y;
+
+                    //print Kaboom!
+                    document.getElementById("commentBoard")
+                    .textContent = "Kaboom!";
+                }
+        }
+    });
+};
+
+
+// -----------------------------------
 
 // ---- check for win ----
     //grab hitBox (array?)
@@ -190,10 +243,12 @@ function pewPewHandler(e) {
 
         
 
+// -----------------------------------
 
 // ---- win() ----
     //move scoreCounter up by one
 
+// -------------- TODO ------------------
 //TODO: lose() 
             //print "Hmm this is most unfortunate. Care to die ::ahem:: try again?"
             //activate start button
@@ -206,3 +261,4 @@ function pewPewHandler(e) {
 // ---- start button ----
     //TODO: gameInit()
     
+// -----------------------------------
