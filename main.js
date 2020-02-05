@@ -3,9 +3,10 @@
 // DOM references
 let game = document.getElementById("game");
 let scoreBoard = document.getElementById("scoreBoard");
+
+// global variables
 let score = 0;
 
-// console.log(game);
 
 //setting context to our canvas
 let ctx = game.getContext("2d");
@@ -43,7 +44,7 @@ let GameObject = function(x, y, color, width, height) {
 };
 // -----------------------------------
 
-// -- creating player, door & beam ----
+// -- creating player, door, beam, topLine & hitBox ----
 let player = new GameObject(285, 268, "#f5173c", 40, 40);
 
 // console.log("Let's do this!");
@@ -58,6 +59,9 @@ let beam = new GameObject(player.x, player.y, "white", 5, 5);
 
 let topLine = new GameObject(0, 0, "#BADA55", boardWidth, 5);
 
+let hitBox = new GameObject((door.x), (door.y + door.height), "blue", 70, 70);
+
+hitBox.render();
 
 // -----------------------------------
 
@@ -134,6 +138,9 @@ let gameLoop = function () {
 //render door
     door.render();
 
+//render hitBox
+    hitBox.render();
+
 //render remaining blocks
     rowOneBlocks.forEach(function(rowBlock){
         if (rowBlock.alive === true) {
@@ -147,12 +154,15 @@ let gameLoop = function () {
             // console.log(rowBlock);
         }
     });
-//check for win
-    //requires collision detection
     
 //check for collision(s)
     detectHit();
     detectLimit();
+    detectObstruction();
+    detectSquish();
+
+//check for win
+    // checkWin();
 
 //move the "lazer gun"/beam with the player to target for fire (pewPew();)
     beam.x = player.x;
@@ -194,9 +204,39 @@ function pewPewHandler(e) {
 
 // -----------------------------------
 
-// ------- collision detection(s) -------
+// --------- impendingDoom() & ceilingDrop() ---------
+    //moves the topLine down by 20px every 15 seconds (15000 miliseconds)
 
-//check for collision between beam and blocks
+function ceilingDrop() {
+    //topLine moves down topLine.y + 20
+    topLine.y += 20;
+
+    //door moves down door.y + 20
+    door.y += 20;
+
+    //hitBox moves down hitBox.y + 20
+    hitBox.y += 20;
+
+    //alive blocks move down if (rowBlock.alive === true)... + 20
+    rowOneBlocks.forEach(function(rowBlock){
+        if (rowBlock.alive === true) {
+            rowBlock.y += 20;
+        }
+    });
+    rowTwoBlocks.forEach(function(rowBlock) {
+        if (rowBlock.alive === true) {
+            rowBlock.y += 20;
+        }
+    });
+}
+
+let impendingDoom = setInterval(ceilingDrop, 1500);
+
+// -----------------------------------
+
+// ----------- collision detection(s) -----------
+
+//detect collision between beam & blocks
         // check four conditions:
             //smallest point of beam (beam.x) < largest point of my blocks (rowBlock.x + rowBlock.width)
             //largest point of beam (beam.x + beam.width) > smallest point of rowBlock (rowBlock.x)
@@ -242,7 +282,7 @@ function detectHit() {
     });
 };
 
-//check collision between laser beam and topLine
+//detect collision between beam & topLine
 function detectLimit() {
     if (beam.x < topLine.x + topLine.width
         && beam.x + beam.width > topLine.x
@@ -254,27 +294,98 @@ function detectLimit() {
     }
 };
 
+// detect collision between hitBox & blocks
+    //this is to help determine win, so equal it to true/false
+function detectObstruction() {
+    console.log("detecting obstruction");
+    let obstructionOne = true;
+    let obstructionTwo = true;
+    
+    rowOneBlocks.forEach(function(rowBlock){
+        if (rowBlock.alive === true) {
+            // console.log("checking row one");
+            if (rowBlock.x < hitBox.x + hitBox.width
+                && rowBlock.x + rowBlock.width > hitBox.x
+                && rowBlock.y < hitBox.y + hitBox.height
+                && rowBlock.y + rowBlock.height > hitBox.y) {
+                    // console.log("is this if statement even actually validating?");
+                    // count how many hitboxes this applies to
+                    // console.log(this.x);
+                    //return false (if "collision", then obstruction to exit exists and game win = false)
+                    obstructionOne = false;
+                }
+            }
+            // console.log(obstructionOne);
+        });
+    rowTwoBlocks.forEach(function(rowBlock){
+        if (rowBlock.alive === true) {
+            // console.log("checking row two");
+            if (rowBlock.x < hitBox.x + hitBox.width
+                && rowBlock.x + rowBlock.width > hitBox.x
+                && rowBlock.y < hitBox.y + hitBox.height
+                && rowBlock.y + rowBlock.height > hitBox.y) {
+                    //return false (if "collision", then obstruction to exit exists and game win = false)
+                    obstructionTwo = false;
+                }
+            }
+            // console.log(obstructionTwo);
+        });
+    
+    if ((obstructionOne === false) || (obstructionTwo === false)) {
+        console.log("No win yet");
+    } else { 
+            console.log("win");
+    };
+  
+};
+
+
 //detect collision between player and blocks AND player and topLine
-// function detectSquish() {
-//     if (player.x < rowBlock.x + rowBlock.width
-//         && player.x + player.width > rowBlock.x
-//         && player.y < rowBlock.y + rowBlock.height
-//         && player.y + player.height > rowBlock.y) {
-//            //lose()
-//     }
-//     else (player.x < topLine.x + topLine.width
-//         && player.x + player.width > topLine.x
-//         && player.y < topLine.y + topLine.height
-//         && player.y + player.height > topLine.y) {
-//            //lose()
-//     };
-// };
+function detectSquish() {
+    let blockSquishOne = false;
+    let blockSquishTwo = false;
+    let topLineSquish = false;
+    rowOneBlocks.forEach(function(rowBlock){
+        if (rowBlock.alive === true) {
+            if (rowBlock.x < player.x + player.width
+                && rowBlock.x + rowBlock.width > player.x
+                && rowBlock.y < player.y + player.height
+                && rowBlock.y + rowBlock.height > player.y) {
+                    console.log("block one squish!");
+                    blockSquishOne = true;
+                }
+            }
+        });
+    
+    rowTwoBlocks.forEach(function(rowBlock){
+        if (rowBlock.alive === true) {
+            // console.log("checking row two");
+            if (rowBlock.x < player.x + player.width
+                && rowBlock.x + rowBlock.width > player.x
+                && rowBlock.y < player.y + player.height
+                && rowBlock.y + rowBlock.height > player.y) {
+                    console.log("block two squish!");
+                    blockSquishTwo = true;
+                }
+            }
+        });
+    if (player.x < topLine.x + topLine.width
+        && player.x + player.width > topLine.x
+        && player.y < topLine.y + topLine.height
+        && player.y + player.height > topLine.y) {
+           console.log("topLine squish!");
+           topLineSquish = true;
+    };
+
+    if (blockSquishOne == true || blockSquishTwo == true || topLineSquish == true) {
+        console.log("Squish!!!");
+    }
+};
 
 
 // -----------------------------------
 
 // ---- check for win ----
-    //grab hitBox (array?)
     //compare to see if any blocks are in the hitBox
         //if YES
             //check if player has collided with blocks || topLine
@@ -285,9 +396,6 @@ function detectLimit() {
                     //nothing...gameLoop should continue to run 
         //if NO
             //win()
-
-        
-
 // -----------------------------------
 
 
@@ -302,12 +410,20 @@ function detectLimit() {
     //print "Hmm this is most unfortunate. Care to die ::ahem:: try again?"
     //activate start button
 
+//detect collision between player and door
+// function detectExit() {
+//     if (player.x < door.x + door.width
+//         && player.x + player.width > door.x
+//         && player.y < door.y + door.height
+//         && player.y + player.height > door.y) {
+//             //win()
+            
+//     }
+// };
+
 // ---- gettingClose() ----
-    //detection happened in check for win()
+    //detection happened in check for win
     //print "Almost there! Fire at will"
 
-//TODO: hitBox
-
-//TODO: impendingDoom() that moves the topLine down by 20px every 15 seconds (15000 miliseconds)
     
 // -----------------------------------
