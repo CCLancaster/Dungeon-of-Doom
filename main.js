@@ -2,18 +2,27 @@
 
 // DOM references
 let game = document.getElementById("game");
+let scoreBoard = document.getElementById("scoreBoard");
+let score = 0;
 
 // console.log(game);
 
 //setting context to our canvas
 let ctx = game.getContext("2d");
 
+//show score
+scoreBoard.textContent = `SCORE: ${score}`;
+
 // console.log(ctx);
 
 // find canvas width and height (will use this for game loop later)
-    //this value will also be necessary to figure out where the screen limits are (aka console.log the values)
+    //this value will also be necessary to figure out where the screen limits are for object placement (aka console.log the values and do the math)
 game.setAttribute("width", getComputedStyle(game)["width"]);
 game.setAttribute("height", getComputedStyle(game)["height"]);
+
+let boardWidth = game.width;
+let boardHeight = game.height;
+
 
 // console.log(getComputedStyle(game)["width"]);
 // console.log(getComputedStyle(game)["height"]);
@@ -46,6 +55,9 @@ let door = new GameObject((Math.random() * 470) + 10, 0, "#ffff33", 70, 10);
 door.render();
 
 let beam = new GameObject(player.x, player.y, "white", 5, 5);
+
+let topLine = new GameObject(0, 0, "#BADA55", boardWidth, 5);
+
 
 // -----------------------------------
 
@@ -113,6 +125,9 @@ let gameLoop = function () {
 //clear board
     ctx.clearRect(0, 0, game.width, game.height);
 
+//render topLine
+    topLine.render();
+
 //render player 
     player.render();
 
@@ -135,8 +150,9 @@ let gameLoop = function () {
 //check for win
     //requires collision detection
     
-//check for collision
+//check for collision(s)
     detectHit();
+    detectLimit();
 
 //move the "lazer gun"/beam with the player to target for fire (pewPew();)
     beam.x = player.x;
@@ -178,9 +194,9 @@ function pewPewHandler(e) {
 
 // -----------------------------------
 
-// ------- collision detection -------
+// ------- collision detection(s) -------
 
-    //check for collision between beam and blocks
+//check for collision between beam and blocks
         // check four conditions:
             //smallest point of beam (beam.x) < largest point of my blocks (rowBlock.x + rowBlock.width)
             //largest point of beam (beam.x + beam.width) > smallest point of rowBlock (rowBlock.x)
@@ -196,8 +212,7 @@ function detectHit() {
                     //change that block from alive to dead (alive = false)
                     rowBlock.alive = false;
 
-                    //end beam interval (or set beam to alive = false?)
-                    // clearInterval(pewPewHandler);
+                    //"reset" laser
                     clearInterval(myInterval);
                     beam.y = player.y;
 
@@ -214,7 +229,8 @@ function detectHit() {
                 && beam.y < rowBlock.y + rowBlock.height
                 && beam.y + beam.height > rowBlock.y) {
                     rowBlock.alive = false;
-                    
+
+                    //"reset" laser
                     clearInterval(myInterval);
                     beam.y = player.y;
 
@@ -225,6 +241,34 @@ function detectHit() {
         }
     });
 };
+
+//check collision between laser beam and topLine
+function detectLimit() {
+    if (beam.x < topLine.x + topLine.width
+        && beam.x + beam.width > topLine.x
+        && beam.y < topLine.y + topLine.height
+        && beam.y + beam.height > topLine.y) {
+            //"reset" laser
+            clearInterval(myInterval);
+            beam.y = player.y;
+    }
+};
+
+//detect collision between player and blocks AND player and topLine
+// function detectSquish() {
+//     if (player.x < rowBlock.x + rowBlock.width
+//         && player.x + player.width > rowBlock.x
+//         && player.y < rowBlock.y + rowBlock.height
+//         && player.y + player.height > rowBlock.y) {
+//            //lose()
+//     }
+//     else (player.x < topLine.x + topLine.width
+//         && player.x + player.width > topLine.x
+//         && player.y < topLine.y + topLine.height
+//         && player.y + player.height > topLine.y) {
+//            //lose()
+//     };
+// };
 
 
 // -----------------------------------
@@ -237,6 +281,7 @@ function detectHit() {
                 //if YES
                     //lose ()
                 //if NO
+                    //check if gettingClose (if one block left)
                     //nothing...gameLoop should continue to run 
         //if NO
             //win()
@@ -245,20 +290,24 @@ function detectHit() {
 
 // -----------------------------------
 
-// ---- win() ----
-    //move scoreCounter up by one
 
 // -------------- TODO ------------------
-//TODO: lose() 
-            //print "Hmm this is most unfortunate. Care to die ::ahem:: try again?"
-            //activate start button
-//TODO: scoreCounter().value to print on screen
-//TODO: gettingClose()that prints "Almost there!" when only one block left
+
+// ---- win() ----
+    //move scoreCounter up by one
+        //score++;
+    //print "Well look at you. You actually survived! Care to tempt fate again?"
+
+// ---- lose() ----
+    //print "Hmm this is most unfortunate. Care to die ::ahem:: try again?"
+    //activate start button
+
+// ---- gettingClose() ----
+    //detection happened in check for win()
+    //print "Almost there! Fire at will"
+
 //TODO: hitBox
-//TODO: commentBoard
-//TODO: topLine - define and target for move
+
 //TODO: impendingDoom() that moves the topLine down by 20px every 15 seconds (15000 miliseconds)
-// ---- start button ----
-    //TODO: gameInit()
     
 // -----------------------------------
