@@ -6,13 +6,13 @@ let scoreBoard = document.getElementById("scoreBoard");
 
 // global variables
 let score = 0;
-
+let endGame = false;
 
 //setting context to our canvas
 let ctx = game.getContext("2d");
 
-//show score
-scoreBoard.textContent = `SCORE: ${score}`;
+
+
 
 // console.log(ctx);
 
@@ -56,6 +56,7 @@ let door = new GameObject((Math.random() * 470) + 10, 0, "#ffff33", 70, 10);
 door.render();
 
 let beam = new GameObject(player.x, player.y, "white", 5, 5);
+beam.update;
 
 let topLine = new GameObject(0, 0, "#BADA55", boardWidth, 5);
 
@@ -89,6 +90,21 @@ for (let i=0; i < 6; i++) {
 
 for (let i = 0; i < 5; i++) {
     rowTwoBlocks[i].render();
+};
+
+function renderBlocks() {
+    rowOneBlocks.forEach(function(rowBlock){
+        if (rowBlock.alive === true) {
+            rowBlock.render();
+            // console.log(rowBlock);
+        }
+    });
+    rowTwoBlocks.forEach(function(rowBlock) {
+        if (rowBlock.alive === true) {
+            rowBlock.render();
+            // console.log(rowBlock);
+        }
+    });
 };
 // -----------------------------------
 
@@ -142,18 +158,14 @@ let gameLoop = function () {
     hitBox.render();
 
 //render remaining blocks
-    rowOneBlocks.forEach(function(rowBlock){
-        if (rowBlock.alive === true) {
-            rowBlock.render();
-            // console.log(rowBlock);
-        }
-    });
-    rowTwoBlocks.forEach(function(rowBlock) {
-        if (rowBlock.alive === true) {
-            rowBlock.render();
-            // console.log(rowBlock);
-        }
-    });
+  if (endGame === false) { 
+   renderBlocks();
+  } else {
+        win();   
+        renderBlocks();
+        clearInterval(runGame);
+        endGame = false;
+  };
     
 //check for collision(s)
     detectHit();
@@ -167,6 +179,7 @@ let gameLoop = function () {
 //move the "lazer gun"/beam with the player to target for fire (pewPew();)
     beam.x = player.x;
     beam.render();
+
 };
 
 //set interval for game loop setInterval (gameLoop, 75)
@@ -179,7 +192,7 @@ let runGame = setInterval(gameLoop, 75);
 // ---- laser beam event listener ----
 document.addEventListener("keydown", pewPewHandler);
 
-var myInterval;
+var beamInterval;
 function pewPewHandler(e) {
     //creates a small rect or "laser beam" (new GameObject.render)
         //5px x 5px
@@ -187,7 +200,7 @@ function pewPewHandler(e) {
     if (x == 13) {
         console.log("I've pressed Enter!");
     
-        beam.render();
+        // beam.render();
         
         // moves small rect up 10px/500 mili
             // beam.y -= 10
@@ -195,11 +208,8 @@ function pewPewHandler(e) {
                 beam.y -= 10;
         };
             
-        myInterval = setInterval(beamMove, 100);
+        beamInterval = setInterval(beamMove, 100);
     };
-    //detect collision with box or topLine (if else)
-        //when collision, stop interval
-        //check for win()
 };
 
 // -----------------------------------
@@ -253,7 +263,7 @@ function detectHit() {
                     rowBlock.alive = false;
 
                     //"reset" laser
-                    clearInterval(myInterval);
+                    clearInterval(beamInterval);
                     beam.y = player.y;
 
                     //print Kaboom!
@@ -271,7 +281,7 @@ function detectHit() {
                     rowBlock.alive = false;
 
                     //"reset" laser
-                    clearInterval(myInterval);
+                    clearInterval(beamInterval);
                     beam.y = player.y;
 
                     //print Kaboom!
@@ -289,7 +299,7 @@ function detectLimit() {
         && beam.y < topLine.y + topLine.height
         && beam.y + beam.height > topLine.y) {
             //"reset" laser
-            clearInterval(myInterval);
+            clearInterval(beamInterval);
             beam.y = player.y;
     }
 };
@@ -334,7 +344,10 @@ function detectObstruction() {
     if ((obstructionOne === false) || (obstructionTwo === false)) {
         console.log("No win yet");
     } else { 
-            console.log("win");
+        clearInterval(impendingDoom);
+        endGame = true;
+        // clearInterval(runGame);
+        // console.log("win");
     };
   
 };
@@ -379,12 +392,61 @@ function detectSquish() {
 
     if (blockSquishOne == true || blockSquishTwo == true || topLineSquish == true) {
         console.log("Squish!!!");
+        clearInterval(impendingDoom);
+        lose();
     }
 };
-
-
 // -----------------------------------
 
+// -------------- win() --------------
+    //move scoreCounter up by one
+        //score++;
+    //print "Well look at you. You actually survived!"
+    function win() {
+        score++;
+        scoreBoard.textContent = `SCORE: ${score}`;
+        document.getElementById("commentBoard").textContent = "Well look at you. You actually survived!";
+        // clearInterval(runGame);
+    } 
+ // -----------------------------------   
+
+// -------------- lose() --------------
+    //     print "Hmm this is most unfortunate. Care to die ::ahem:: try again?"
+    function lose() {
+        // clearInterval(runGame);
+        document.getElementById("commentBoard")
+                        .textContent = "Hmm this is most unfortunate.";
+    };
+// -----------------------------------
+
+
+
+// -------------- TODO ------------------
+
+
+//stretch: gettingClose()
+    //detection happened in check for win
+    //print "Almost there! Fire at will"
+
+//stretch: activate start button
+    //add "Care to die ::ahem:: try again?" to lose function commentBoard
+    //add "Care to tempt fate again?" to win function commentBoard
+
+//stetch: detect collision between player and door
+// function detectExit() {
+//     if (player.x < door.x + door.width
+//         && player.x + player.width > door.x
+//         && player.y < door.y + door.height
+//         && player.y + player.height > door.y) {
+//             //win() 
+//     }
+// };
+
+    
+// ---------------------------------------
+
+
+// OLD LOGIC
 // ---- check for win ----
     //compare to see if any blocks are in the hitBox
         //if YES
@@ -396,34 +458,4 @@ function detectSquish() {
                     //nothing...gameLoop should continue to run 
         //if NO
             //win()
-// -----------------------------------
-
-
-// -------------- TODO ------------------
-
-// ---- win() ----
-    //move scoreCounter up by one
-        //score++;
-    //print "Well look at you. You actually survived! Care to tempt fate again?"
-
-// ---- lose() ----
-    //print "Hmm this is most unfortunate. Care to die ::ahem:: try again?"
-    //activate start button
-
-//detect collision between player and door
-// function detectExit() {
-//     if (player.x < door.x + door.width
-//         && player.x + player.width > door.x
-//         && player.y < door.y + door.height
-//         && player.y + player.height > door.y) {
-//             //win()
-            
-//     }
-// };
-
-// ---- gettingClose() ----
-    //detection happened in check for win
-    //print "Almost there! Fire at will"
-
-    
 // -----------------------------------
