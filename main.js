@@ -25,7 +25,7 @@ let boardWidth = game.width;
 let boardHeight = game.height;
 
 
-// console.log(getComputedStyle(game)["width"]);
+console.log(getComputedStyle(game)["width"]);
 // console.log(getComputedStyle(game)["height"]);
 // -----------------------------------
 
@@ -56,7 +56,12 @@ let door = new GameObject((Math.random() * 470) + 10, 0, "#ffff33", 70, 10);
 door.render();
 
 let beam = new GameObject(player.x, player.y, "white", 5, 5);
-beam.update;
+
+beam.move = function() {
+    beam.y -= 10;
+};
+
+beam.fired = false;
 
 let topLine = new GameObject(0, 0, "#BADA55", boardWidth, 5);
 
@@ -128,11 +133,17 @@ function movementHandler(e) {
         case(68):
             player.x += 10;
     }
-
+    // if (player.x = 0) {
+    //     player.x -= 0;
+    // };
+    // if (player.x = 610) {
+    //     player.x += 0;
+    // };
     player.render();
 };
 
 //TODO: add restriction to movement so player can't go off screen
+    //add if statement to movementHandler
 
 // -----------------------------------
 
@@ -177,7 +188,13 @@ let gameLoop = function () {
     // checkWin();
 
 //move the "lazer gun"/beam with the player to target for fire (pewPew();)
-    beam.x = player.x;
+    if (beam.fired === false) {
+        beam.x = player.x;
+        beam.y = player.y;
+    } else {
+        beam.move();
+    };
+
     beam.render();
 
 };
@@ -192,23 +209,13 @@ let runGame = setInterval(gameLoop, 75);
 // ---- laser beam event listener ----
 document.addEventListener("keydown", pewPewHandler);
 
-var beamInterval;
 function pewPewHandler(e) {
     //creates a small rect or "laser beam" (new GameObject.render)
         //5px x 5px
     var x = e.keyCode;
     if (x == 13) {
         console.log("I've pressed Enter!");
-    
-        // beam.render();
-        
-        // moves small rect up 10px/500 mili
-            // beam.y -= 10
-        function beamMove() {
-                beam.y -= 10;
-        };
-            
-        beamInterval = setInterval(beamMove, 100);
+        beam.fired = true;
     };
 };
 
@@ -263,8 +270,7 @@ function detectHit() {
                     rowBlock.alive = false;
 
                     //"reset" laser
-                    clearInterval(beamInterval);
-                    beam.y = player.y;
+                    beam.fired = false;
 
                     //print Kaboom!
                     document.getElementById("commentBoard")
@@ -281,8 +287,7 @@ function detectHit() {
                     rowBlock.alive = false;
 
                     //"reset" laser
-                    clearInterval(beamInterval);
-                    beam.y = player.y;
+                    beam.fired = false;
 
                     //print Kaboom!
                     document.getElementById("commentBoard")
@@ -298,9 +303,12 @@ function detectLimit() {
         && beam.x + beam.width > topLine.x
         && beam.y < topLine.y + topLine.height
         && beam.y + beam.height > topLine.y) {
+            
+            // console.log("Hit me baby one more time!");
+            // clearInterval(runGame);
+            // clearInterval(impendingDoom);
             //"reset" laser
-            clearInterval(beamInterval);
-            beam.y = player.y;
+            beam.fired = false;
     }
 };
 

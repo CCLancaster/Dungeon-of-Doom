@@ -48,21 +48,21 @@ MVP:
 
 
 3-ish Stretch Goals:
-⏹ reset button
+    4)⏹ reset button
 ⏹ text box below fills with witty commentary after each shot
-⏹ when game won, player can move in a straight path to/through the door to initialize the next round
+    1) ⏹ when game won, player can move in a straight path to/through the door to initialize the next round
 ⏹ sound!
     - actual door sound at beginning of game
     - laser "pew pew" sounds when firing
     - doom music
     - hooray for win and squish for lose 
 ⏹ create movement buttons for mobile users
-⏹ futuristic themed game with small character and realistic laser bullets
-⏹ persistent local storage of score
-⏹ random number of blocks4
+    3) ⏹ futuristic themed game with small character and realistic laser bullets
+    2) ⏹ persistent local storage of score
+⏹ random number of blocks
 
 Super Stretch!:
-⏹ different color blocks take different "hit" countsu
+⏹ different color blocks take different "hit" counts
 
 
 UPDATES (while coding):
