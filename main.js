@@ -25,7 +25,7 @@ let boardWidth = game.width;
 let boardHeight = game.height;
 
 
-console.log(getComputedStyle(game)["width"]);
+// console.log(getComputedStyle(game)["width"]);
 // console.log(getComputedStyle(game)["height"]);
 // -----------------------------------
 
@@ -49,13 +49,13 @@ let player = new GameObject(285, 268, "#f5173c", 40, 40);
 
 // console.log("Let's do this!");
 
-player.render();
+// player.render();
 
 let door = new GameObject((Math.random() * 470) + 10, 0, "#ffff33", 70, 10);
 
-door.render();
+// door.render();
 
-let beam = new GameObject(player.x, player.y, "white", 5, 5);
+let beam = new GameObject(player.x + 3, player.y + 3, "white", 5, 5);
 
 beam.move = function() {
     beam.y -= 10;
@@ -67,7 +67,7 @@ let topLine = new GameObject(0, 0, "#BADA55", boardWidth, 5);
 
 let hitBox = new GameObject((door.x), (door.y + door.height), "blue", 70, 70);
 
-hitBox.render();
+// hitBox.render();
 
 // -----------------------------------
 
@@ -128,22 +128,17 @@ function movementHandler(e) {
     // console.log(player)
     switch (e.keyCode) {
         case(65):
-            player.x -= 10;
+            if (player.x - 10 > 0) {
+                player.x -= 10;
+            }
             break;
         case(68):
+            if (player.x + 10 < (boardWidth - player.width)) {
             player.x += 10;
+            }
     }
-    // if (player.x = 0) {
-    //     player.x -= 0;
-    // };
-    // if (player.x = 610) {
-    //     player.x += 0;
-    // };
     player.render();
 };
-
-//TODO: add restriction to movement so player can't go off screen
-    //add if statement to movementHandler
 
 // -----------------------------------
 
@@ -189,8 +184,8 @@ let gameLoop = function () {
 
 //move the "lazer gun"/beam with the player to target for fire (pewPew();)
     if (beam.fired === false) {
-        beam.x = player.x;
-        beam.y = player.y;
+        beam.x = player.x + 3;
+        beam.y = player.y + 3;
     } else {
         beam.move();
     };
@@ -247,7 +242,7 @@ function ceilingDrop() {
     });
 }
 
-let impendingDoom = setInterval(ceilingDrop, 1500);
+let impendingDoom = setInterval(ceilingDrop, 2000);
 
 // -----------------------------------
 
@@ -424,6 +419,9 @@ function detectSquish() {
         // clearInterval(runGame);
         document.getElementById("commentBoard")
                         .textContent = "Hmm this is most unfortunate.";
+        renderBlocks();
+        clearInterval(runGame);
+        endGame = false;
     };
 // -----------------------------------
 
