@@ -465,3 +465,6 @@ function detectSquish() {
         //if NO
             //win()
 // -----------------------------------
+
+
+// STRETCHY KING WAS HERE
