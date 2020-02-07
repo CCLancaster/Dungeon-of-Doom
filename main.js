@@ -45,15 +45,14 @@ let GameObject = function(x, y, color, width, height) {
 // -----------------------------------
 
 // -- creating player, door, beam, topLine & hitBox ----
-let player = new GameObject(285, 268, "#f5173c", 40, 40);
-
-// console.log("Let's do this!");
-
-// player.render();
 
 let door = new GameObject((Math.random() * 470) + 10, 0, "#ffff33", 70, 10);
 
-// door.render();
+let topLine = new GameObject(0, 0, "#0a46ee", boardWidth, 5);
+
+let hitBox = new GameObject((door.x), (door.y + door.height), "#2e2e2e", 70, 70);
+
+let player = new GameObject(285, 268, "#f5173c", 40, 40);
 
 let beam = new GameObject(player.x + 3, player.y + 3, "white", 5, 5);
 
@@ -63,12 +62,9 @@ beam.move = function() {
 
 beam.fired = false;
 
-let topLine = new GameObject(0, 0, "#BADA55", boardWidth, 5);
-
-let hitBox = new GameObject((door.x), (door.y + door.height), "blue", 70, 70);
-
-// hitBox.render();
-
+// hitBox.style.zIndex = "0";
+// player.style.zIndex = "5";
+// hitBox.globalAlpha = 0.5;
 // -----------------------------------
 
 // -------- creating blocks ----------
@@ -84,9 +80,6 @@ for (let i = 0; i < 6; i++) {
 for (let i = 0; i < 5; i++) {
     rowTwoBlocks.push(new GameObject((Math.random() * 550) + 10, 60, "#7718d8", 50, 50));
     };
-
-// console.log(rowOneBlocks);
-// console.log(rowTwoBlocks);
 
 //for loop to render block[i]
 for (let i=0; i < 6; i++) {
@@ -151,17 +144,17 @@ let gameLoop = function () {
 //clear board
     ctx.clearRect(0, 0, game.width, game.height);
 
-//render topLine
-    topLine.render();
-
-//render player 
-    player.render();
-
 //render door
     door.render();
 
+//render topLine
+    topLine.render();
+
 //render hitBox
     hitBox.render();
+
+//render player 
+    player.render();
 
 //render remaining blocks
   if (endGame === false) { 
