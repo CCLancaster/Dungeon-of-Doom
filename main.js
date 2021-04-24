@@ -50,11 +50,11 @@ let door = new GameObject((Math.random() * 470) + 10, 0, "#ffff33", 70, 10);
 
 let topLine = new GameObject(0, 0, "#0a46ee", boardWidth, 5);
 
-let hitBox = new GameObject((door.x), (door.y + door.height), "#2e2e2e", 70, 70);
+let hitBox = new GameObject((door.x), (door.y + door.height), "white", 70, 70);
 
 let player = new GameObject(285, 268, "#f5173c", 40, 40);
 
-let beam = new GameObject(player.x + 3, player.y + 3, "white", 5, 5);
+let beam = new GameObject(player.x + 3, player.y + 3, "#2e2e2e", 5, 5);
 
 beam.move = function() {
     beam.y -= 10;
