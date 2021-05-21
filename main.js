@@ -54,7 +54,9 @@ let hitBox = new GameObject((door.x), (door.y + door.height), "white", 70, 70);
 
 let player = new GameObject(285, 268, "#f5173c", 40, 40);
 
-let beam = new GameObject(player.x + 3, player.y + 3, "#2e2e2e", 5, 5);
+let beam = new GameObject(player.x + 3, player.y + 3, "white", 5, 5);
+
+// old beam color as of 5/21/21 -> #2e2e2e 
 
 beam.move = function() {
     beam.y -= 10;
@@ -125,9 +127,19 @@ function movementHandler(e) {
                 player.x -= 10;
             }
             break;
+        case(37):
+            if (player.x - 10 > 0) {
+                player.x -= 10;
+            }
+            break;
         case(68):
             if (player.x + 10 < (boardWidth - player.width)) {
-            player.x += 10;
+                player.x += 10;
+            }
+            break;
+        case(39):
+            if (player.x + 10 < (boardWidth - player.width)) {
+                player.x += 10;
             }
     }
     player.render();
